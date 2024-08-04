@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi.csproj": {}
+    "C:\\Users\\Сергей\\source\\repos\\PizzaAPI\\PizzaMinApi\\PizzaMinApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi.csproj": {
+    "C:\\Users\\Сергей\\source\\repos\\PizzaAPI\\PizzaMinApi\\PizzaMinApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi.csproj",
+        "projectUniqueName": "C:\\Users\\Сергей\\source\\repos\\PizzaAPI\\PizzaMinApi\\PizzaMinApi.csproj",
         "projectName": "PizzaMinApi",
-        "projectPath": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi.csproj",
+        "projectPath": "C:\\Users\\Сергей\\source\\repos\\PizzaAPI\\PizzaMinApi\\PizzaMinApi.csproj",
         "packagesPath": "C:\\Users\\Сергей\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\obj\\",
+        "outputPath": "C:\\Users\\Сергей\\source\\repos\\PizzaAPI\\PizzaMinApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Сергей\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -47,6 +47,14 @@
           "targetAlias": "net8.0",
           "dependencies": {
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.7, )"
+            },
+            "Microsoft.AspNetCore.Identity": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.7, )"
             },

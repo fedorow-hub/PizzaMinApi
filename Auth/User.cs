@@ -9,13 +9,18 @@ public record UserModel
 }
 
 
-public class User
+public class User : IdentityUser
 {
-    public int Id { get; set; }
+    public User(string name)
+        : base(name)
+    {
+
+    }
+    //public int Id { get; set; }
     public string FullName { get; set; }
-    public string Email { get; set; }
+    //public string Email { get; set; }
     public string Password { get; set; }
-    public UserRole UserRole { get; set; }
+    public UserRole Role { get; set; }
     public List<Order> Orders { get; set; }
     public List<CartItem> CartItems { get; set; }
     public Cart Cart { get; set; }

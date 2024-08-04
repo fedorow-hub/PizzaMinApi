@@ -14,6 +14,9 @@ foreach (var api in apis)
     api.Register(app);
 }
 
+SeedData.EnsurePopulated(app);
+IdentitySeedData.EnsurePopulated(app);
+
 app.Run();
 
 
