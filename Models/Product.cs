@@ -1,0 +1,45 @@
+public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string ImageUrl { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+    public Category Category { get; set; }
+    public int CategoryId { get; set; }
+    public List<ProductItem> Items { get; set; }
+    public List<Ingredient> Ingredients { get; set; }
+}
+
+// вариации продуктов
+public class ProductItem
+{
+    public int Id { get; set; }
+    public int Price { get; set; }
+    public int? Size { get; set; }
+    public int? PizzaType { get; set; }
+    public List<CartItem> CartItems { get; set; }
+    public Product Product { get; set; } // TODO уточнить необходимость для связи один ко многим
+    public int ProductId { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+}
+
+public class Ingredient
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public int Price { get; set; }
+    public string ImageUrl { get; set; } = string.Empty;
+    public List<CartItem> CartItems { get; set; }
+    public List<Product> Products { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+}
+
+public class Category
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public List<Product> Products { get; set; }
+}

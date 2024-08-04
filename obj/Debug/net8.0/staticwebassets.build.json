@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "3EZpMIexBSIVBHVDOFlmyYyy6kuFEpNNkg1cyLBOWJ8=",
+  "Source": "PizzaMinApi",
+  "BasePath": "_content/PizzaMinApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
