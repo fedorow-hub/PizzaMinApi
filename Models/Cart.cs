@@ -3,9 +3,8 @@ public class Cart
 {
     public int Id { get; set; }
 
-    public User? User { get; set; } // TODO уточнить необходимость для связи один ко многим
-
     // если пользован зарегистрирован, то корзину привязываем на уровне пользователя
+    public User? User { get; set; }
     public int? UserId { get; set; }
 
     // корзина у незарегистрированного пользователя привязывается к 
@@ -28,11 +27,11 @@ public class CartItem
 {
     public int Id { get; set; }
 
-    public ProductItem ProductItem { get; set; } // TODO уточнить необходимость для связи один ко многим
+    public ProductItem ProductItem { get; set; }
 
     public int ProductItemId { get; set; }
 
-    public Cart Cart { get; set; } // TODO уточнить необходимость для связи один ко многим
+    public Cart Cart { get; set; }
 
     public int CartId { get; set; }
 
@@ -45,5 +44,4 @@ public class CartItem
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }
-
 }

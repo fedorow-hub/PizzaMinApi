@@ -6,7 +6,7 @@ public class AuthApi : IApi
         {
             UserModel userModel = new()
             {
-                UserName = context.Request.Query["username"],
+                Login = context.Request.Query["username"],
                 Password = context.Request.Query["password"]
             };
             var userDto = userRepository.GetUser(userModel);

@@ -1,15 +1,14 @@
 public class UserRepository : IUserRepository
 {
-    private List<UserDTO> _users => new()
+    private PizzaDb _context;
+    public UserRepository(PizzaDb context)
     {
-        new UserDTO("John", "123"),
-        new UserDTO("Monica", "123"),
-        new UserDTO("Nancy", "123"),
-    };
+        _context = context;
+    }
 
-    public UserDTO GetUser(UserModel userModel) =>
-        _users.FirstOrDefault(u =>
-            string.Equals(u.UserName, userModel.UserName) &&
+    public User GetUser(UserModel userModel) =>
+        _context.Users.FirstOrDefault(u =>
+            string.Equals(u.Login, userModel.Login) &&
             string.Equals(u.Password, userModel.Password)) ??
             throw new Exception();
 }

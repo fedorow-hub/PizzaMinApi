@@ -15,7 +15,6 @@ foreach (var api in apis)
 }
 
 SeedData.EnsurePopulated(app);
-IdentitySeedData.EnsurePopulated(app);
 
 app.Run();
 
@@ -32,7 +31,7 @@ void RegisterServices(IServiceCollection services)
 
     services.AddScoped<IPizzaRepository, PizzaRepository>();
     services.AddSingleton<ITokenService>(new TokenService());
-    services.AddSingleton<IUserRepository>(new UserRepository());
+    services.AddScoped<IUserRepository, UserRepository>();
     services.AddAuthorization();
     services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>

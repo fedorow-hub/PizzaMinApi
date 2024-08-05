@@ -1,4 +1,4 @@
 public interface IUserRepository
 {
-    UserDTO GetUser(UserModel userModel);
+    User GetUser(UserModel userModel);
 }

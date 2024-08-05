@@ -1,4 +1,4 @@
 public interface ITokenService
 {
-    string BuildToken(string key, string issuer, UserDTO user);
+    string BuildToken(string key, string issuer, User user);
 }

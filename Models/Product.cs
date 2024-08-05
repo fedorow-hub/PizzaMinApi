@@ -15,11 +15,11 @@ public class Product
 public class ProductItem
 {
     public int Id { get; set; }
-    public int Price { get; set; }
+    public double Price { get; set; }
     public int? Size { get; set; }
     public int? PizzaType { get; set; }
-    public List<CartItem> CartItems { get; set; }
-    public Product Product { get; set; } // TODO уточнить необходимость для связи один ко многим
+    //public List<CartItem> CartItems { get; set; }
+    public Product Product { get; set; }
     public int ProductId { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
@@ -31,7 +31,7 @@ public class Ingredient
     public string Name { get; set; } = string.Empty;
     public int Price { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
-    public List<CartItem> CartItems { get; set; }
+    //public List<CartItem> CartItems { get; set; }
     public List<Product> Products { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

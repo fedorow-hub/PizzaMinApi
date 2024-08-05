@@ -29,13 +29,13 @@ public class PizzaRepository : IPizzaRepository
 
         if (productFromDb == null) return;
 
-        productFromDb.Category = product.Category;
+        //productFromDb.Category = product.Category;
         productFromDb.CategoryId = product.CategoryId;
         productFromDb.UpdatedAt = DateTime.Now;
         productFromDb.ImageUrl = product.ImageUrl;
         productFromDb.Name = product.Name;
-        productFromDb.Ingredients = product.Ingredients;
-        productFromDb.Items = product.Items;
+        /* productFromDb.Ingredients = product.Ingredients;
+        productFromDb.Items = product.Items; */
     }
 
     public async Task DeleteProductAsync(int productId)

@@ -1,24 +1,20 @@
-public record UserDTO(string UserName, string Password);
+//public record UserDTO(string UserName, string Password);
 
 public record UserModel
 {
     [Required]
-    public string UserName { get; set; } = string.Empty;
+    public string Login { get; set; } = string.Empty;
     [Required]
     public string Password { get; set; } = string.Empty;
 }
 
 
-public class User : IdentityUser
+public class User
 {
-    public User(string name)
-        : base(name)
-    {
-
-    }
-    //public int Id { get; set; }
+    public int Id { get; set; }
     public string FullName { get; set; }
-    //public string Email { get; set; }
+    public string Email { get; set; }
+    public string Login { get; set; }
     public string Password { get; set; }
     public UserRole Role { get; set; }
     public List<Order> Orders { get; set; }
@@ -41,7 +37,6 @@ public enum UserRole
 public class VerificationCode
 {
     public int Id { get; set; }
-
     public User User { get; set; }
     public int UserId { get; set; }
 

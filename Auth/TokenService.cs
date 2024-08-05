@@ -1,11 +1,11 @@
 public class TokenService : ITokenService
 {
     private TimeSpan ExpiryDuration = new TimeSpan(0, 30, 0); // будет валиден 30 минут
-    public string BuildToken(string key, string issuer, UserDTO user)
+    public string BuildToken(string key, string issuer, User user)
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, user.UserName), // добавляем имя из DTO
+            new Claim(ClaimTypes.Name, user.Login), // добавляем имя из DTO
             new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
         };
 
