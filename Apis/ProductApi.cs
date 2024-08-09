@@ -16,6 +16,17 @@ public class ProductApi : IApi
             .WithName("GetProduct")
             .WithTags("Getters");
 
+        app.MapGet("/products/search", async (HttpContext context, IPizzaRepository repository) =>
+            {
+                string queryString = context.Request.Query["query"];
+                return await repository.GetProductsBySearchParamAsync(queryString) is List<Product> products
+                    ? Results.Ok(products)
+                    : Results.NotFound();
+            })
+            .Produces<List<Product>>(StatusCodes.Status200OK)
+            .WithName("GetProducts")
+            .WithTags("Getters");
+
         app.MapPost("/products", [Authorize] async ([FromBody] Product product, IPizzaRepository repository) =>
             {
                 await repository.InsertProductAsync(product);

@@ -9,4 +9,7 @@ public class PizzaDb : DbContext
     public DbSet<Story> Stores => Set<Story>();
     public DbSet<StoryItem> StoryItems => Set<StoryItem>();
     public DbSet<User> Users => Set<User>();
+    public DbSet<Cart> Carts => Set<Cart>();
+
+    public DbSet<CartItem> CartItems => Set<CartItem>();
 }

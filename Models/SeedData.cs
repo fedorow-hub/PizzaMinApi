@@ -3,8 +3,8 @@ public static class SeedData
     private static double RandomDecimalNumber(int min, int max)
     {
         Random rnd = new Random();
-        double value = rnd.Next();
-        return Math.Floor(value * (max - min) * 10 + min * 10) / 10;
+        double value = rnd.Next(min, max);
+        return Math.Floor(value);
     }
 
     private static ProductItem GenerateProductItem(Product product, int? pizzaType = null, int? size = null)
@@ -351,18 +351,20 @@ public static class SeedData
             );
         }
 
+        Product pizza1 = new Product
+        {
+            Name = "Пепперони фреш",
+            ImageUrl = "https://media.dodostatic.net/image/r:233x233/11EE7D61304FAF5A98A6958F2BB2D260.webp",
+            CategoryId = 1,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+            Ingredients = ingredients.Skip(0).Take(5).ToList()
+        };
+
+        var productItem = GenerateProductItem(pizza1, 1, 20);
+
         if (!context.ProductItems.Any())
         {
-            Product pizza1 = new Product
-            {
-                Name = "Пепперони фреш",
-                ImageUrl = "https://media.dodostatic.net/image/r:233x233/11EE7D61304FAF5A98A6958F2BB2D260.webp",
-                CategoryId = 1,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                Ingredients = ingredients.Skip(0).Take(5).ToList()
-            };
-
             Product pizza2 = new Product
             {
                 Name = "Пепперони фреш",
@@ -387,7 +389,7 @@ public static class SeedData
 
             context.ProductItems.AddRange(
                 // Пицца "Пепперони фреш"
-                GenerateProductItem(pizza1, 1, 20),
+                productItem,
                 GenerateProductItem(pizza1, 2, 30),
                 GenerateProductItem(pizza1, 2, 40),
 
@@ -487,26 +489,58 @@ public static class SeedData
             );
         }
 
+        var user1 = new User
+        {
+            Login = "User",
+            FullName = "User",
+            Email = "user@test.ru",
+            Password = "11111",
+            Verified = DateTime.Now,
+            Role = UserRole.USER
+        };
+        var user2 = new User
+        {
+            Login = "Admin",
+            FullName = "Admin",
+            Email = "admin@test.ru",
+            Password = "22222",
+            Verified = DateTime.Now,
+            Role = UserRole.ADMIN
+        };
+
         if (!context.Users.Any())
         {
-            context.Users.AddRange(
-                new User
+            context.Users.AddRange(user1, user2);
+        }
+
+        var cart = new Cart
+        {
+            User = user1,
+            TotalAmount = 0
+        };
+
+        if (!context.Carts.Any())
+        {
+            context.Carts.AddRange(
+                cart,
+                new Cart
                 {
-                    Login = "User",
-                    FullName = "User",
-                    Email = "user@test.ru",
-                    Password = "11111",
-                    Verified = DateTime.Now,
-                    Role = UserRole.USER
-                },
-                new User
+                    User = user2,
+                    TotalAmount = 0
+                }
+            );
+        }
+
+        if (!context.CartItems.Any())
+        {
+            context.CartItems.Add(
+                new CartItem
                 {
-                    Login = "Admin",
-                    FullName = "Admin",
-                    Email = "admin@test.ru",
-                    Password = "22222",
-                    Verified = DateTime.Now,
-                    Role = UserRole.ADMIN
+                    ProductItem = productItem,
+                    Cart = cart,
+                    User = user1,
+                    Quantity = 1,
+                    Ingredients = ingredients.Skip(0).Take(5).ToList()
                 }
             );
         }

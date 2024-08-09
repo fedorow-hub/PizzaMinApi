@@ -35,6 +35,10 @@ public class CartItem
 
     public int CartId { get; set; }
 
+    public User User { get; set; }
+
+    public int UserId { get; set; }
+
     public List<Ingredient> Ingredients { get; set; }
 
     public int Quantity { get; set; }

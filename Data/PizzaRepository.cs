@@ -13,6 +13,13 @@ public class PizzaRepository : IPizzaRepository
     {
         return await _context.Products.ToListAsync();
     }
+
+    public async Task<List<Product>> GetProductsBySearchParamAsync(string searchParam)
+    {
+        var products = await _context.Products.ToListAsync();
+        return products.Where(p => p.Name.Contains(searchParam, StringComparison.OrdinalIgnoreCase)).ToList();
+    }
+
     public async Task<Product> GetProductAsync(int productId)
     {
         return await _context.Products.FindAsync(new object[] { productId });
@@ -29,13 +36,13 @@ public class PizzaRepository : IPizzaRepository
 
         if (productFromDb == null) return;
 
-        //productFromDb.Category = product.Category;
+        productFromDb.Category = product.Category;
         productFromDb.CategoryId = product.CategoryId;
         productFromDb.UpdatedAt = DateTime.Now;
         productFromDb.ImageUrl = product.ImageUrl;
         productFromDb.Name = product.Name;
-        /* productFromDb.Ingredients = product.Ingredients;
-        productFromDb.Items = product.Items; */
+        productFromDb.Ingredients = product.Ingredients;
+        productFromDb.Items = product.Items;
     }
 
     public async Task DeleteProductAsync(int productId)
@@ -45,6 +52,11 @@ public class PizzaRepository : IPizzaRepository
         if (productFromDb == null) return;
 
         _context.Products.Remove(productFromDb);
+    }
+
+    public async Task<List<Ingredient>> GetIngredientsAsync()
+    {
+        return await _context.Ingredients.ToListAsync();
     }
 
     public async Task SaveAsync()
@@ -71,4 +83,6 @@ public class PizzaRepository : IPizzaRepository
         Dispose(true);
         GC.SuppressFinalize(this);
     }
+
+
 }

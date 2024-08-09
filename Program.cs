@@ -1,3 +1,4 @@
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 RegisterServices(builder.Services);
@@ -50,13 +51,26 @@ void RegisterServices(IServiceCollection services)
         });
 
     services.AddTransient<IApi, ProductApi>();
+    services.AddTransient<IApi, IngredientApi>();
     services.AddTransient<IApi, AuthApi>();
+
+    services.AddCors(options =>
+    {
+        options.AddPolicy(name: MyAllowSpecificOrigins,
+                        policy =>
+                        {
+                            policy.WithOrigins("http://localhost:3000");
+                        });
+    });
 }
+
 
 void Configure(WebApplication app)
 {
     app.UseAuthentication();
     app.UseAuthorization();
+
+    app.UseCors(MyAllowSpecificOrigins);
 
     if (app.Environment.IsDevelopment())
     {
