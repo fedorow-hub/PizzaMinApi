@@ -53,6 +53,7 @@ void RegisterServices(IServiceCollection services)
     services.AddTransient<IApi, ProductApi>();
     services.AddTransient<IApi, IngredientApi>();
     services.AddTransient<IApi, AuthApi>();
+    services.AddTransient<IApi, CategoryApi>();
 
     services.AddCors(options =>
     {

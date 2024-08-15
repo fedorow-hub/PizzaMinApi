@@ -8,6 +8,7 @@ public interface IPizzaRepository : IDisposable
     Task DeleteProductAsync(int productId);
 
     Task<List<Ingredient>> GetIngredientsAsync();
+    Task<List<CategoryDto>> GetCategoresAsync();
 
     Task SaveAsync();
 }
