@@ -9,7 +9,7 @@ public class ProductApi : IApi
                 .WithTags("Getters");
 
         app.MapGet("/products/{id}", async (int id, IPizzaRepository repository) =>
-            await repository.GetProductAsync(id) is Product product
+            await repository.GetProductAsync(id) is ProductDto product
             ? Results.Ok(product)
             : Results.NotFound())
             .Produces<Product>(StatusCodes.Status200OK)

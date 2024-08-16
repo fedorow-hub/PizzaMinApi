@@ -21,9 +21,36 @@ public class PizzaRepository : IPizzaRepository
         return products.Where(p => p.Name.Contains(searchParam, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 
-    public async Task<Product> GetProductAsync(int productId)
+    public async Task<ProductDto> GetProductAsync(int productId)
     {
-        return await _context.Products.FindAsync(new object[] { productId });
+        var product = await _context.Products
+                                   .Include(c => c.Ingredients)
+                                   .Include(c => c.Items)
+                                   .Where(c => c.Id == productId)
+                                   .FirstOrDefaultAsync();
+
+        var productDto = new ProductDto
+        {
+            Id = product.Id,
+            Name = product.Name,
+            ImageUrl = product.ImageUrl,
+            Ingredients = product.Ingredients.Select(i => new IngredientDto
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Price = i.Price,
+                ImageUrl = i.ImageUrl
+            }).ToList(),
+            ProductItems = product.Items.Select(i => new ProductItemDto
+            {
+                Id = i.Id,
+                Price = i.Price,
+                Size = i.Size,
+                PizzaType = i.PizzaType
+            }).ToList()
+        };
+
+        return productDto;
     }
 
     public async Task InsertProductAsync(Product product)
