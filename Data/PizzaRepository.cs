@@ -202,14 +202,13 @@ public class PizzaRepository : IPizzaRepository
         };
     }
 
-    public async Task<CartDto> PatchCartAsync(string token, int cartItemId, int quantity)
+    public async Task<CartDto> PatchCartItemAsync(string token, int cartItemId, int quantity)
     {
         var cartItemDb = await _context.CartItems.FirstOrDefaultAsync(c => c.Id == cartItemId);
 
         if (cartItemDb == null) return null;
 
         cartItemDb.Quantity = quantity;
-        await _context.SaveChangesAsync();// TODO возможно надо будет сделать только раз в конце
 
         return await UptateCartTotalAmountAsync(token);
     }
@@ -243,7 +242,6 @@ public class PizzaRepository : IPizzaRepository
 
         cart.TotalAmount = totalAmount;
         cart.UpdatedAt = DateTime.Now;
-        await _context.SaveChangesAsync();
 
         var cartDto = new CartDto
         {
@@ -277,5 +275,16 @@ public class PizzaRepository : IPizzaRepository
             }).ToList()
         };
         return cartDto;
+    }
+
+    public async Task<CartDto> DeleteCartItemAsync(string token, int cartItemId)
+    {
+        var cartItemFromDb = await _context.CartItems.FirstOrDefaultAsync(c => c.Id == cartItemId);
+
+        if (cartItemFromDb == null) return null;
+
+        _context.CartItems.Remove(cartItemFromDb);
+
+        return await UptateCartTotalAmountAsync(token);
     }
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Сергей\\source\\repos\\PizzaAPI\\PizzaMinApi\\PizzaMinApi.csproj": {}
+    "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Сергей\\source\\repos\\PizzaAPI\\PizzaMinApi\\PizzaMinApi.csproj": {
+    "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Сергей\\source\\repos\\PizzaAPI\\PizzaMinApi\\PizzaMinApi.csproj",
+        "projectUniqueName": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj",
         "projectName": "PizzaMinApi",
-        "projectPath": "C:\\Users\\Сергей\\source\\repos\\PizzaAPI\\PizzaMinApi\\PizzaMinApi.csproj",
+        "projectPath": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj",
         "packagesPath": "C:\\Users\\Сергей\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Сергей\\source\\repos\\PizzaAPI\\PizzaMinApi\\obj\\",
+        "outputPath": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Сергей\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -23,7 +23,8 @@
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.pkg.github.com/fedorow-hub/index.json": {}
         },
         "frameworks": {
           "net8.0": {
@@ -69,6 +70,10 @@
             "Microsoft.IdentityModel.Tokens": {
               "target": "Package",
               "version": "[8.0.1, )"
+            },
+            "MyRestApiLibrary": {
+              "target": "Package",
+              "version": "[1.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
