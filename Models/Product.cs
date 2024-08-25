@@ -66,7 +66,6 @@ public class IngredientDto
     public string Name { get; set; } = string.Empty;
     public int Price { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
-    //public List<CartItem> CartItems { get; set; }
 }
 
 public class ProductItemDto
@@ -75,7 +74,11 @@ public class ProductItemDto
     public double Price { get; set; }
     public int? Size { get; set; }
     public int? PizzaType { get; set; }
+    public ProductDto? Product { get; set; }
 }
+
+
+
 
 
 

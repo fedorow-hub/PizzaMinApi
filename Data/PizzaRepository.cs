@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
 
+
 public class PizzaRepository : IPizzaRepository
 {
     private readonly PizzaDb _context;
@@ -149,5 +150,132 @@ public class PizzaRepository : IPizzaRepository
         GC.SuppressFinalize(this);
     }
 
+    public async Task<CartDto> GetCartAsync(string token)
+    {
+        var cart = await _context.Carts
+                                   .Include(c => c.CartItems).ThenInclude(p => p.Ingredients)
+                                   .Include(c => c.CartItems).ThenInclude(p => p.ProductItem).ThenInclude(pi => pi.Product)
+                                   .Where(c => c.TokenId == token)
+                                   .FirstOrDefaultAsync();
 
+        if (cart != null)
+        {
+            var cartDto = new CartDto
+            {
+                Id = cart.Id,
+                TotalAmount = cart.TotalAmount,
+                CartItems = cart.CartItems.Select(ci => new CartItemDto
+                {
+                    Id = ci.Id,
+                    ProductItem = new ProductItemDto
+                    {
+                        Id = ci.ProductItem.Id,
+                        Price = ci.ProductItem.Price,
+                        Size = ci.ProductItem.Size,
+                        PizzaType = ci.ProductItem.PizzaType,
+                        Product = new ProductDto
+                        {
+                            Id = ci.ProductItem.Product.Id,
+                            Name = ci.ProductItem.Product.Name,
+                            ImageUrl = ci.ProductItem.Product.ImageUrl
+                        }
+                    },
+                    Ingredients = ci.Ingredients.Select(i => new IngredientDto
+                    {
+                        Id = i.Id,
+                        Name = i.Name,
+                        Price = i.Price,
+                        ImageUrl = i.ImageUrl
+                    }).ToList(),
+                    Quantity = ci.Quantity,
+                    CreatedAt = ci.CreatedAt
+                }).ToList()
+            };
+            return cartDto;
+        }
+
+        return new CartDto
+        {
+            Id = 0,
+            TotalAmount = 0,
+            CartItems = []
+        };
+    }
+
+    public async Task<CartDto> PatchCartAsync(string token, int cartItemId, int quantity)
+    {
+        var cartItemDb = await _context.CartItems.FirstOrDefaultAsync(c => c.Id == cartItemId);
+
+        if (cartItemDb == null) return null;
+
+        cartItemDb.Quantity = quantity;
+        await _context.SaveChangesAsync();// TODO возможно надо будет сделать только раз в конце
+
+        return await UptateCartTotalAmountAsync(token);
+    }
+
+    //функция обновления всей корзины
+    private async Task<CartDto> UptateCartTotalAmountAsync(string token)
+    {
+        var cart = await _context.Carts
+                                   .Include(c => c.CartItems).ThenInclude(p => p.Ingredients)
+                                   .Include(c => c.CartItems).ThenInclude(p => p.ProductItem).ThenInclude(pi => pi.Product)
+                                   .Where(c => c.TokenId == token)
+                                   .FirstOrDefaultAsync();
+
+        if (cart == null) return null;
+
+        var totalAmount = 0.0;
+
+        foreach (var item in cart.CartItems)
+        {
+            var itemPrice = item.ProductItem.Price;
+
+            var ingredientsTotalPrice = 0;
+
+            foreach (var ingredient in item.Ingredients)
+            {
+                ingredientsTotalPrice = ingredientsTotalPrice + ingredient.Price;
+            }
+
+            totalAmount = (itemPrice + ingredientsTotalPrice) * item.Quantity;
+        }
+
+        cart.TotalAmount = totalAmount;
+        cart.UpdatedAt = DateTime.Now;
+        await _context.SaveChangesAsync();
+
+        var cartDto = new CartDto
+        {
+            Id = cart.Id,
+            TotalAmount = totalAmount,
+            CartItems = cart.CartItems.Select(ci => new CartItemDto
+            {
+                Id = ci.Id,
+                ProductItem = new ProductItemDto
+                {
+                    Id = ci.ProductItem.Id,
+                    Price = ci.ProductItem.Price,
+                    Size = ci.ProductItem.Size,
+                    PizzaType = ci.ProductItem.PizzaType,
+                    Product = new ProductDto
+                    {
+                        Id = ci.ProductItem.Product.Id,
+                        Name = ci.ProductItem.Product.Name,
+                        ImageUrl = ci.ProductItem.Product.ImageUrl
+                    }
+                },
+                Ingredients = ci.Ingredients.Select(i => new IngredientDto
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Price = i.Price,
+                    ImageUrl = i.ImageUrl
+                }).ToList(),
+                Quantity = ci.Quantity,
+                CreatedAt = ci.CreatedAt
+            }).ToList()
+        };
+        return cartDto;
+    }
 }

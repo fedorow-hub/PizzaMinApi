@@ -13,7 +13,7 @@ public class Cart
     public string TokenId { get; set; } = string.Empty;
 
     // общая стоимость товаров в корзине
-    public int TotalAmount { get; set; }
+    public double TotalAmount { get; set; }
 
     public List<CartItem> CartItems { get; set; }
 
@@ -49,3 +49,35 @@ public class CartItem
 
     public DateTime UpdatedAt { get; set; }
 }
+
+
+public class CartDto
+{
+    public int Id { get; set; }
+
+    public double TotalAmount { get; set; }
+
+    public List<CartItemDto> CartItems { get; set; }
+}
+
+public class CartItemDto
+{
+    public int Id { get; set; }
+
+    public ProductItemDto ProductItem { get; set; }
+
+    public List<IngredientDto> Ingredients { get; set; }
+
+    public int Quantity { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+}
+
+
+public class QuantityRequest
+{
+    public int Quantity { get; set; }
+}
+
+
+

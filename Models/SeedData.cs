@@ -516,7 +516,9 @@ public static class SeedData
         var cart = new Cart
         {
             User = user1,
-            TotalAmount = 0
+            TokenId = "1111",
+            TotalAmount = 650,
+            CreatedAt = DateTime.Now
         };
 
         if (!context.Carts.Any())
@@ -526,7 +528,9 @@ public static class SeedData
                 new Cart
                 {
                     User = user2,
-                    TotalAmount = 0
+                    TokenId = "2222",
+                    TotalAmount = 750,
+                    CreatedAt = DateTime.Now
                 }
             );
         }

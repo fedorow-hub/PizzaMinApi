@@ -10,5 +10,8 @@ public interface IPizzaRepository : IDisposable
     Task<List<Ingredient>> GetIngredientsAsync();
     Task<List<CategoryDto>> GetCategoresAsync();
 
+    Task<CartDto> GetCartAsync(string token);
+    Task<CartDto> PatchCartAsync(string token, int id, int quantity);
+
     Task SaveAsync();
 }
