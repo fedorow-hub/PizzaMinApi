@@ -10,7 +10,7 @@ public class CartApi : IApi
                 {
                     return Results.Ok(new CartDto { TotalAmount = 0, CartItems = [] });
                 }
-                return Results.Ok(await repository.GetCartAsync(token));
+                return Results.Ok(await repository.FindOrCreateCartAsync(token));
             })
             .Produces<Cart>(StatusCodes.Status200OK)
             .WithName("GetCart")
@@ -28,8 +28,8 @@ public class CartApi : IApi
                 await repository.SaveAsync();
                 return Results.Ok(cart);
             })
-            .Accepts<Cart>("application/json")
-            .Produces<Cart>(StatusCodes.Status204NoContent)
+            .Accepts<QuantityRequest>("application/json")
+            .Produces<CartDto>(StatusCodes.Status200OK)
             .WithName("PatchCart")
             .WithTags("Updators");
 
@@ -45,8 +45,26 @@ public class CartApi : IApi
                 await repository.SaveAsync();
                 return Results.Ok(cart);
             })
-            .Produces<Cart>(StatusCodes.Status204NoContent)
+            .Produces<CartDto>(StatusCodes.Status200OK)
             .WithName("DeleteCartItem")
             .WithTags("Deletors");
+
+        app.MapPost("/cart", async (CreateCartItemValues cartItemValues, HttpContext context, IPizzaRepository repository) =>
+            {
+                string token = context.Request.Cookies["cartToken"] ?? "1111";
+
+                if (token == "")
+                {
+                    token = Guid.NewGuid().ToString();
+                }
+                var cart = await repository.FindOrCreateCartAsync(token);
+
+                var findCartItem = await repository.FindCartItem(token, cartItemValues, cart.Id);
+                await repository.SaveAsync();
+                return Results.Ok(cart); //TODO вшить в ответ cookie cartToken={token}
+            })
+            .Produces<CartDto>(StatusCodes.Status200OK)
+            .WithName("SetCart")
+            .WithTags("Setters");
     }
 }

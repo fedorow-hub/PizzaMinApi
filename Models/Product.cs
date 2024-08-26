@@ -35,6 +35,20 @@ public class Ingredient
     public List<Product> Products { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is Ingredient other)
+        {
+            return Id == other.Id;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id);
+    }
 }
 
 public class Category

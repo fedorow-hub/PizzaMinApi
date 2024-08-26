@@ -69,8 +69,6 @@ public class CartItemDto
     public List<IngredientDto> Ingredients { get; set; }
 
     public int Quantity { get; set; }
-
-    public DateTime CreatedAt { get; set; }
 }
 
 
@@ -78,6 +76,14 @@ public class QuantityRequest
 {
     public int Quantity { get; set; }
 }
+
+public class CreateCartItemValues
+{
+    public int ProductItemId { get; set; }
+    public List<int> Ingredients { get; set; }
+    public int Quantity { get; set; }
+}
+
 
 
 

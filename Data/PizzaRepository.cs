@@ -1,6 +1,7 @@
 
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Security.Authentication;
 
 
 public class PizzaRepository : IPizzaRepository
@@ -150,7 +151,7 @@ public class PizzaRepository : IPizzaRepository
         GC.SuppressFinalize(this);
     }
 
-    public async Task<CartDto> GetCartAsync(string token)
+    public async Task<CartDto> FindOrCreateCartAsync(string token)
     {
         var cart = await _context.Carts
                                    .Include(c => c.CartItems).ThenInclude(p => p.Ingredients)
@@ -158,48 +159,50 @@ public class PizzaRepository : IPizzaRepository
                                    .Where(c => c.TokenId == token)
                                    .FirstOrDefaultAsync();
 
-        if (cart != null)
+        if (cart == null)
         {
-            var cartDto = new CartDto
+            cart = new Cart
             {
-                Id = cart.Id,
-                TotalAmount = cart.TotalAmount,
-                CartItems = cart.CartItems.Select(ci => new CartItemDto
-                {
-                    Id = ci.Id,
-                    ProductItem = new ProductItemDto
-                    {
-                        Id = ci.ProductItem.Id,
-                        Price = ci.ProductItem.Price,
-                        Size = ci.ProductItem.Size,
-                        PizzaType = ci.ProductItem.PizzaType,
-                        Product = new ProductDto
-                        {
-                            Id = ci.ProductItem.Product.Id,
-                            Name = ci.ProductItem.Product.Name,
-                            ImageUrl = ci.ProductItem.Product.ImageUrl
-                        }
-                    },
-                    Ingredients = ci.Ingredients.Select(i => new IngredientDto
-                    {
-                        Id = i.Id,
-                        Name = i.Name,
-                        Price = i.Price,
-                        ImageUrl = i.ImageUrl
-                    }).ToList(),
-                    Quantity = ci.Quantity,
-                    CreatedAt = ci.CreatedAt
-                }).ToList()
+                TokenId = token,
+                TotalAmount = 0,
+                CartItems = new List<CartItem>(),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             };
-            return cartDto;
+            await _context.Carts.AddAsync(cart);
         }
 
-        return new CartDto
+        var cartDto = new CartDto
         {
-            Id = 0,
-            TotalAmount = 0,
-            CartItems = []
+            Id = cart.Id,
+            TotalAmount = cart.TotalAmount,
+            CartItems = cart.CartItems.Select(ci => new CartItemDto
+            {
+                Id = ci.Id,
+                ProductItem = new ProductItemDto
+                {
+                    Id = ci.ProductItem.Id,
+                    Price = ci.ProductItem.Price,
+                    Size = ci.ProductItem.Size,
+                    PizzaType = ci.ProductItem.PizzaType,
+                    Product = new ProductDto
+                    {
+                        Id = ci.ProductItem.Product.Id,
+                        Name = ci.ProductItem.Product.Name,
+                        ImageUrl = ci.ProductItem.Product.ImageUrl
+                    }
+                },
+                Ingredients = ci.Ingredients.Select(i => new IngredientDto
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Price = i.Price,
+                    ImageUrl = i.ImageUrl
+                }).ToList(),
+                Quantity = ci.Quantity
+            }).ToList()
         };
+        return cartDto;
     }
 
     public async Task<CartDto> PatchCartItemAsync(string token, int cartItemId, int quantity)
@@ -213,6 +216,37 @@ public class PizzaRepository : IPizzaRepository
         return await UptateCartTotalAmountAsync(token);
     }
 
+    public async Task<CartDto> DeleteCartItemAsync(string token, int cartItemId)
+    {
+        var cartItemFromDb = await _context.CartItems.FirstOrDefaultAsync(c => c.Id == cartItemId);
+
+        if (cartItemFromDb == null) return null;
+
+        _context.CartItems.Remove(cartItemFromDb);
+
+        return await UptateCartTotalAmountAsync(token);
+    }
+
+    public async Task<CartDto> FindCartItem(string token, CreateCartItemValues cartItem, int userCartId)
+    {
+        var findCartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == userCartId
+                                && ci.ProductItemId == cartItem.ProductItemId
+                                && ci.Ingredients.Select(c => c.Id).OrderBy(x => x).SequenceEqual(cartItem.Ingredients.OrderBy(x => x)));
+
+        if (findCartItem != null)
+        {
+            //если найден аналогичный cartItem, то просто прибавляем еще один
+            findCartItem.Quantity++;
+            _context.CartItems.Update(findCartItem);
+        }
+        else
+        {
+            //TODO если не найден аналогичный cartItem, то создаем новый и записываем в БД
+        }
+
+        return await UptateCartTotalAmountAsync(token);
+
+    }
     //функция обновления всей корзины
     private async Task<CartDto> UptateCartTotalAmountAsync(string token)
     {
@@ -270,21 +304,11 @@ public class PizzaRepository : IPizzaRepository
                     Price = i.Price,
                     ImageUrl = i.ImageUrl
                 }).ToList(),
-                Quantity = ci.Quantity,
-                CreatedAt = ci.CreatedAt
+                Quantity = ci.Quantity
             }).ToList()
         };
         return cartDto;
     }
 
-    public async Task<CartDto> DeleteCartItemAsync(string token, int cartItemId)
-    {
-        var cartItemFromDb = await _context.CartItems.FirstOrDefaultAsync(c => c.Id == cartItemId);
 
-        if (cartItemFromDb == null) return null;
-
-        _context.CartItems.Remove(cartItemFromDb);
-
-        return await UptateCartTotalAmountAsync(token);
-    }
 }
