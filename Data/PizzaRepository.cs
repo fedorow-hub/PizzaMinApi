@@ -227,26 +227,46 @@ public class PizzaRepository : IPizzaRepository
         return await UptateCartTotalAmountAsync(token);
     }
 
-    public async Task<CartDto> FindCartItem(string token, CreateCartItemValues cartItem, int userCartId)
+    public async Task<CartDto> FindOrCreateCartItem(string token, CreateCartItemValues cartItem, int userCartId)
     {
-        var findCartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == userCartId
-                                && ci.ProductItemId == cartItem.ProductItemId
-                                && ci.Ingredients.Select(c => c.Id).OrderBy(x => x).SequenceEqual(cartItem.Ingredients.OrderBy(x => x)));
+        var findCartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == userCartId && ci.ProductItemId == cartItem.ProductItemId);
 
-        if (findCartItem != null)
+        var isFullTheSame = findCartItem == null ? false : findCartItem.Ingredients.Select(c => c.Id).OrderBy(x => x).SequenceEqual(cartItem.Ingredients.OrderBy(x => x));
+
+        var ingreditents = from ingredient in _context.Ingredients where cartItem.Ingredients.Contains(ingredient.Id) select ingredient;
+        var productItem = await _context.ProductItems.FirstOrDefaultAsync(pi => pi.Id == cartItem.ProductItemId);
+        var cart = await _context.Carts.FirstOrDefaultAsync(c => c.Id == userCartId);
+
+        if (productItem == null || cart == null)
+        {
+            throw new Exception("ProductItem or Cart not found");
+        }
+
+        if (isFullTheSame)
         {
             //если найден аналогичный cartItem, то просто прибавляем еще один
-            findCartItem.Quantity++;
-            _context.CartItems.Update(findCartItem);
+            if (findCartItem != null)
+            {
+                findCartItem.Quantity++;
+                _context.CartItems.Update(findCartItem);
+            }
+            return await UptateCartTotalAmountAsync(token);
         }
         else
         {
-            //TODO если не найден аналогичный cartItem, то создаем новый и записываем в БД
-        }
-
-        return await UptateCartTotalAmountAsync(token);
-
+            //если не найден аналогичный cartItem, то создаем новый и записываем в БД
+            var item = new CartItem
+            {
+                ProductItem = productItem,
+                Cart = cart,
+                Quantity = cartItem.Quantity,
+                Ingredients = ingreditents.ToList()
+            };
+            var ing = await _context.CartItems.AddAsync(item);
+            return await UptateCartTotalAmountAsync(token);
+        };
     }
+
     //функция обновления всей корзины
     private async Task<CartDto> UptateCartTotalAmountAsync(string token)
     {
@@ -271,7 +291,7 @@ public class PizzaRepository : IPizzaRepository
                 ingredientsTotalPrice = ingredientsTotalPrice + ingredient.Price;
             }
 
-            totalAmount = (itemPrice + ingredientsTotalPrice) * item.Quantity;
+            totalAmount = totalAmount + (itemPrice + ingredientsTotalPrice) * item.Quantity;
         }
 
         cart.TotalAmount = totalAmount;
@@ -309,6 +329,4 @@ public class PizzaRepository : IPizzaRepository
         };
         return cartDto;
     }
-
-
 }

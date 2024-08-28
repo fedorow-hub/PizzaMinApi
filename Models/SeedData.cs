@@ -542,7 +542,7 @@ public static class SeedData
                 {
                     ProductItem = productItem,
                     Cart = cart,
-                    User = user1,
+                    //User = user1,
                     Quantity = 1,
                     Ingredients = ingredients.Skip(0).Take(5).ToList()
                 }

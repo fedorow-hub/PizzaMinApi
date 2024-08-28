@@ -13,7 +13,7 @@ public interface IPizzaRepository : IDisposable
     Task<CartDto> FindOrCreateCartAsync(string token);
     Task<CartDto> PatchCartItemAsync(string token, int id, int quantity);
     Task<CartDto> DeleteCartItemAsync(string token, int cartItemId);
-    Task<CartDto> FindCartItem(string token, CreateCartItemValues cartItem, int userCartId);
+    Task<CartDto> FindOrCreateCartItem(string token, CreateCartItemValues cartItem, int userCartId);
 
     Task SaveAsync();
 }

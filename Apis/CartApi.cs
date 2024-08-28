@@ -51,7 +51,7 @@ public class CartApi : IApi
 
         app.MapPost("/cart", async (CreateCartItemValues cartItemValues, HttpContext context, IPizzaRepository repository) =>
             {
-                string token = context.Request.Cookies["cartToken"] ?? "1111";
+                string token = context.Request.Cookies["cartToken"] ?? "";
 
                 if (token == "")
                 {
@@ -59,9 +59,24 @@ public class CartApi : IApi
                 }
                 var cart = await repository.FindOrCreateCartAsync(token);
 
-                var findCartItem = await repository.FindCartItem(token, cartItemValues, cart.Id);
+                try
+                {
+                    cart = await repository.FindOrCreateCartItem(token, cartItemValues, cart.Id);
+                }
+                catch (Exception ex)
+                {
+                    Console.Write(ex.Message);
+                }
+
                 await repository.SaveAsync();
-                return Results.Ok(cart); //TODO вшить в ответ cookie cartToken={token}
+                context.Response.Cookies.Append("cartToken", token, new CookieOptions
+                {
+                    HttpOnly = true, // Опция для безопасности, чтобы cookie не было доступно через JavaScript
+                    //Secure = true, // Убедитесь, что cookie передается только по HTTPS
+                    SameSite = SameSiteMode.Strict, // Опция для предотвращения CSRF атак
+                    Expires = DateTimeOffset.UtcNow.AddDays(30) // Установите срок действия cookie
+                });
+                return Results.Ok(cart);
             })
             .Produces<CartDto>(StatusCodes.Status200OK)
             .WithName("SetCart")
