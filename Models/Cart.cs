@@ -55,6 +55,8 @@ public class CartDto
 {
     public int Id { get; set; }
 
+    public string TokenId { get; set; } = string.Empty;
+
     public double TotalAmount { get; set; }
 
     public List<CartItemDto> CartItems { get; set; }
@@ -81,7 +83,6 @@ public class CreateCartItemValues
 {
     public int ProductItemId { get; set; }
     public List<int> Ingredients { get; set; }
-    public int Quantity { get; set; }
 }
 
 

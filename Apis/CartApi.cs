@@ -53,6 +53,8 @@ public class CartApi : IApi
             {
                 string token = context.Request.Cookies["cartToken"] ?? "";
 
+                token = "";
+
                 if (token == "")
                 {
                     token = Guid.NewGuid().ToString();
