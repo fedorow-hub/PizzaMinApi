@@ -893,15 +893,6 @@
           }
         }
       },
-      "MyRestApiLibrary/1.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/MyRestApiLibrary.dll": {}
-        },
-        "runtime": {
-          "lib/net8.0/MyRestApiLibrary.dll": {}
-        }
-      },
       "SQLitePCLRaw.bundle_e_sqlite3/2.1.6": {
         "type": "package",
         "dependencies": {
@@ -2555,18 +2546,6 @@
         "version.txt"
       ]
     },
-    "MyRestApiLibrary/1.0.0": {
-      "sha512": "Ym7JSidvd12DY8pJZ24Hd/aeSGxTihZfG3YmvjzeWUqnNMobGx2PXQfV4aTu7Pr3BY7n+0FfQjsfusYjHojasg==",
-      "type": "package",
-      "path": "myrestapilibrary/1.0.0",
-      "files": [
-        ".nupkg.metadata",
-        "README.md",
-        "lib/net8.0/MyRestApiLibrary.dll",
-        "myrestapilibrary.1.0.0.nupkg.sha512",
-        "myrestapilibrary.nuspec"
-      ]
-    },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.6": {
       "sha512": "BmAf6XWt4TqtowmiWe4/5rRot6GerAeklmOPfviOvwLoF5WwgxcJHAxZtySuyW9r9w+HLILnm8VfJFLCUJYW8A==",
       "type": "package",
@@ -3171,25 +3150,24 @@
       "Microsoft.EntityFrameworkCore >= 8.0.7",
       "Microsoft.EntityFrameworkCore.Sqlite >= 8.0.7",
       "Microsoft.IdentityModel.Tokens >= 8.0.1",
-      "MyRestApiLibrary >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.7.0",
       "System.IdentityModel.Tokens.Jwt >= 8.0.1"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Сергей\\.nuget\\packages\\": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\PizzaMinApi\\PizzaMinApi.csproj",
       "projectName": "PizzaMinApi",
-      "projectPath": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj",
-      "packagesPath": "C:\\Users\\Сергей\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\obj\\",
+      "projectPath": "C:\\Users\\Admin\\source\\repos\\PizzaMinApi\\PizzaMinApi.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Admin\\source\\repos\\PizzaMinApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Сергей\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3198,8 +3176,7 @@
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Program Files\\dotnet\\library-packs": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://nuget.pkg.github.com/fedorow-hub/index.json": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
@@ -3246,10 +3223,6 @@
             "target": "Package",
             "version": "[8.0.1, )"
           },
-          "MyRestApiLibrary": {
-            "target": "Package",
-            "version": "[1.0.0, )"
-          },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[6.7.0, )"
@@ -3278,8 +3251,16 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Произошла ошибка при получении данных уязвимости пакета: Не удалось загрузить индекс службы для источника https://api.nuget.org/v3/index.json."
+    }
+  ]
 }

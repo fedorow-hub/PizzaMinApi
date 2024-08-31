@@ -193,7 +193,7 @@ public class PizzaRepository : IPizzaRepository
             TotalAmount = cart.TotalAmount,
             CartItems = cart.CartItems.Select(ci => new CartItemDto
             {
-                Id = ci.Id,
+                Id = ci.Id,                
                 ProductItem = new ProductItemDto
                 {
                     Id = ci.ProductItem.Id,
@@ -246,9 +246,20 @@ public class PizzaRepository : IPizzaRepository
     {
         var findCartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == userCartId && ci.ProductItemId == cartItem.ProductItemId);
 
-        var isFullTheSame = findCartItem == null ? false : findCartItem.Ingredients.Select(c => c.Id).OrderBy(x => x).SequenceEqual(cartItem.IngredientsIds.OrderBy(x => x));
+        var isFullTheSame = false;
+        var ingreditents = new List<Ingredient>();
 
-        var ingreditents = (from ingredient in _context.Ingredients where cartItem.IngredientsIds.Contains(ingredient.Id) select ingredient).ToList();
+        if(cartItem.IngredientsIds != null && cartItem.IngredientsIds.Count > 0) 
+        {
+            ingreditents = (from ingredient in _context.Ingredients where cartItem.IngredientsIds.Contains(ingredient.Id) select ingredient).ToList();
+            isFullTheSame = findCartItem == null ? false : findCartItem.Ingredients.Select(c => c.Id).OrderBy(x => x).SequenceEqual(cartItem.IngredientsIds.OrderBy(x => x));
+        }
+
+        if((cartItem.IngredientsIds == null || cartItem.IngredientsIds.Count == 0) && findCartItem?.Ingredients.Count == 0) 
+        {
+            isFullTheSame = true;
+        }
+
         var productItem = await _context.ProductItems.Include(pi => pi.Product).FirstOrDefaultAsync(pi => pi.Id == cartItem.ProductItemId);
         var cart = await _context.Carts.FirstOrDefaultAsync(c => c.Id == userCartId);
 
@@ -278,7 +289,10 @@ public class PizzaRepository : IPizzaRepository
                 Ingredients = ingreditents,
                 CreatedAt = DateTime.Now
             };
-            var ing = await _context.CartItems.AddAsync(item);
+            await _context.CartItems.AddAsync(item);
+
+            await _context.SaveChangesAsync();
+
             return await UptateCartTotalAmountAsync(token);
         };
     }
