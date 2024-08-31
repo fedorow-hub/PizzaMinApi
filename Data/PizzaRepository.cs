@@ -275,7 +275,8 @@ public class PizzaRepository : IPizzaRepository
                 ProductItem = productItem,
                 Cart = cart,
                 Quantity = 1,
-                Ingredients = ingreditents
+                Ingredients = ingreditents,
+                CreatedAt = DateTime.Now
             };
             var ing = await _context.CartItems.AddAsync(item);
             return await UptateCartTotalAmountAsync(token);
@@ -317,7 +318,7 @@ public class PizzaRepository : IPizzaRepository
             Id = cart.Id,
             TotalAmount = totalAmount,
             TokenId = token,
-            CartItems = cart.CartItems.Select(ci => new CartItemDto
+            CartItems = cart.CartItems.OrderByDescending(ci => ci.CreatedAt).Select(ci => new CartItemDto
             {
                 Id = ci.Id,
                 ProductItem = new ProductItemDto
