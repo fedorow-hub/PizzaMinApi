@@ -246,9 +246,9 @@ public class PizzaRepository : IPizzaRepository
     {
         var findCartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == userCartId && ci.ProductItemId == cartItem.ProductItemId);
 
-        var isFullTheSame = findCartItem == null ? false : findCartItem.Ingredients.Select(c => c.Id).OrderBy(x => x).SequenceEqual(cartItem.Ingredients.OrderBy(x => x));
+        var isFullTheSame = findCartItem == null ? false : findCartItem.Ingredients.Select(c => c.Id).OrderBy(x => x).SequenceEqual(cartItem.IngredientsIds.OrderBy(x => x));
 
-        var ingreditents = (from ingredient in _context.Ingredients where cartItem.Ingredients.Contains(ingredient.Id) select ingredient).ToList();
+        var ingreditents = (from ingredient in _context.Ingredients where cartItem.IngredientsIds.Contains(ingredient.Id) select ingredient).ToList();
         var productItem = await _context.ProductItems.Include(pi => pi.Product).FirstOrDefaultAsync(pi => pi.Id == cartItem.ProductItemId);
         var cart = await _context.Carts.FirstOrDefaultAsync(c => c.Id == userCartId);
 

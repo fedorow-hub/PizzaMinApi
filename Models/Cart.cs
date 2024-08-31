@@ -82,7 +82,7 @@ public class QuantityRequest
 public class CreateCartItemValues
 {
     public int ProductItemId { get; set; }
-    public List<int> Ingredients { get; set; }
+    public List<int> IngredientsIds { get; set; }
 }
 
 

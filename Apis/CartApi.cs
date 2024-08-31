@@ -5,7 +5,7 @@ public class CartApi : IApi
     {
         app.MapGet("/cart", async (HttpContext context, IPizzaRepository repository) =>
             {
-                string token = context.Request.Cookies["cartToken"] ?? "1111";
+                string token = context.Request.Cookies["cartToken"] ?? "";
                 if (token == "")
                 {
                     return Results.Ok(new CartDto { TotalAmount = 0, CartItems = [] });
@@ -18,7 +18,7 @@ public class CartApi : IApi
 
         app.MapPatch("/cart/{id}", async ([FromBody] QuantityRequest request, int id, HttpContext context, IPizzaRepository repository) =>
             {
-                string token = context.Request.Cookies["cartToken"] ?? "1111";
+                string token = context.Request.Cookies["cartToken"] ?? "";
 
                 if (token == "")
                 {
@@ -35,7 +35,7 @@ public class CartApi : IApi
 
         app.MapDelete("/cart/{id}", async (int id, HttpContext context, IPizzaRepository repository) =>
             {
-                string token = context.Request.Cookies["cartToken"] ?? "1111";
+                string token = context.Request.Cookies["cartToken"] ?? "";
 
                 if (token == "")
                 {
@@ -52,8 +52,6 @@ public class CartApi : IApi
         app.MapPost("/cart", async (CreateCartItemValues cartItemValues, HttpContext context, IPizzaRepository repository) =>
             {
                 string token = context.Request.Cookies["cartToken"] ?? "";
-
-                token = "";
 
                 if (token == "")
                 {
@@ -74,8 +72,8 @@ public class CartApi : IApi
                 context.Response.Cookies.Append("cartToken", token, new CookieOptions
                 {
                     HttpOnly = true, // Опция для безопасности, чтобы cookie не было доступно через JavaScript
-                    //Secure = true, // Убедитесь, что cookie передается только по HTTPS
-                    SameSite = SameSiteMode.Strict, // Опция для предотвращения CSRF атак
+                    //Secure = false, // Убедитесь, что cookie передается только по HTTPS
+                    SameSite = SameSiteMode.Unspecified, // Опция для предотвращения CSRF атак
                     Expires = DateTimeOffset.UtcNow.AddDays(30) // Установите срок действия cookie
                 });
                 return Results.Ok(cart);
