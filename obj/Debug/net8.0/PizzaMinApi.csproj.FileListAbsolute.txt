@@ -173,7 +173,6 @@ C:\Users\Сергей\source\repos\PizzaMinApi\PizzaMinApi\bin\Debug\net8.0\Micr
 C:\Users\Сергей\source\repos\PizzaMinApi\PizzaMinApi\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\Сергей\source\repos\PizzaMinApi\PizzaMinApi\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\Сергей\source\repos\PizzaMinApi\PizzaMinApi\bin\Debug\net8.0\Microsoft.OpenApi.dll
-C:\Users\Сергей\source\repos\PizzaMinApi\PizzaMinApi\bin\Debug\net8.0\MyRestApiLibrary.dll
 C:\Users\Сергей\source\repos\PizzaMinApi\PizzaMinApi\bin\Debug\net8.0\SQLitePCLRaw.batteries_v2.dll
 C:\Users\Сергей\source\repos\PizzaMinApi\PizzaMinApi\bin\Debug\net8.0\SQLitePCLRaw.core.dll
 C:\Users\Сергей\source\repos\PizzaMinApi\PizzaMinApi\bin\Debug\net8.0\SQLitePCLRaw.provider.e_sqlite3.dll

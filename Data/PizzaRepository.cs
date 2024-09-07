@@ -89,8 +89,9 @@ public class PizzaRepository : IPizzaRepository
         return await _context.Ingredients.ToListAsync();
     }
 
-    public async Task<List<CategoryDto>> GetCategoresAsync()
+    public async Task<List<CategoryDto>> GetCategoresAsync(double minPrice, double maxPrice, int[]? sizes, int[]? pizzaTypes, int[]? ingredientsIdArr)
     {
+        //TODO Доработать фильтрацию
         var categories = await _context.Categories
                                    .Include(c => c.Products).ThenInclude(p => p.Ingredients)
                                    .Include(c => c.Products).ThenInclude(p => p.Items)
@@ -106,7 +107,7 @@ public class PizzaRepository : IPizzaRepository
                 Id = p.Id,
                 Name = p.Name,
                 ImageUrl = p.ImageUrl,
-                ProductItems = p.Items.Select(i => new ProductItemDto
+                ProductItems = p.Items.Where(item => item.Price >= minPrice && item.Price <= maxPrice).OrderBy(item => item.Price).Select(i => new ProductItemDto
                 {
                     Id = i.Id,
                     Price = i.Price,
@@ -125,6 +126,8 @@ public class PizzaRepository : IPizzaRepository
 
         return categoryDtos;
     }
+
+    //(ingredientsIdArr == null ? p.Ingredients : p.Ingredients.Where(i => ingredientsIdArr.Contains(i.Id)))
 
     public async Task SaveAsync()
     {
@@ -193,7 +196,7 @@ public class PizzaRepository : IPizzaRepository
             TotalAmount = cart.TotalAmount,
             CartItems = cart.CartItems.Select(ci => new CartItemDto
             {
-                Id = ci.Id,                
+                Id = ci.Id,
                 ProductItem = new ProductItemDto
                 {
                     Id = ci.ProductItem.Id,
@@ -249,13 +252,13 @@ public class PizzaRepository : IPizzaRepository
         var isFullTheSame = false;
         var ingreditents = new List<Ingredient>();
 
-        if(cartItem.IngredientsIds != null && cartItem.IngredientsIds.Count > 0) 
+        if (cartItem.IngredientsIds != null && cartItem.IngredientsIds.Count > 0)
         {
             ingreditents = (from ingredient in _context.Ingredients where cartItem.IngredientsIds.Contains(ingredient.Id) select ingredient).ToList();
             isFullTheSame = findCartItem == null ? false : findCartItem.Ingredients.Select(c => c.Id).OrderBy(x => x).SequenceEqual(cartItem.IngredientsIds.OrderBy(x => x));
         }
 
-        if((cartItem.IngredientsIds == null || cartItem.IngredientsIds.Count == 0) && findCartItem?.Ingredients.Count == 0) 
+        if ((cartItem.IngredientsIds == null || cartItem.IngredientsIds.Count == 0) && findCartItem?.Ingredients.Count == 0)
         {
             isFullTheSame = true;
         }

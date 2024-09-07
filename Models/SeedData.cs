@@ -389,7 +389,8 @@ public static class SeedData
 
             context.ProductItems.AddRange(
                 // Пицца "Пепперони фреш"
-                productItem,
+                //productItem,
+                GenerateProductItem(pizza1, 1, 20),
                 GenerateProductItem(pizza1, 2, 30),
                 GenerateProductItem(pizza1, 2, 40),
 
