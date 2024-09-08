@@ -302,3 +302,5 @@ C:\Users\Admin\source\repos\PizzaMinApi\obj\Debug\net8.0\refint\PizzaMinApi.dll
 C:\Users\Admin\source\repos\PizzaMinApi\obj\Debug\net8.0\PizzaMinApi.pdb
 C:\Users\Admin\source\repos\PizzaMinApi\obj\Debug\net8.0\PizzaMinApi.genruntimeconfig.cache
 C:\Users\Admin\source\repos\PizzaMinApi\obj\Debug\net8.0\ref\PizzaMinApi.dll
+c:\Users\Сергей\source\repos\PizzaMinApi\PizzaMinApi\bin\Debug\net8.0\Resend.dll
+c:\Users\Сергей\source\repos\PizzaMinApi\PizzaMinApi\bin\Debug\net8.0\Newtonsoft.Json.dll

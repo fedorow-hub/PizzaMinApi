@@ -71,6 +71,14 @@
               "target": "Package",
               "version": "[8.0.1, )"
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "Resend": {
+              "target": "Package",
+              "version": "[0.0.7, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.7.0, )"

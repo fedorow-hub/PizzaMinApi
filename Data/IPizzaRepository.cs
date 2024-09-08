@@ -15,5 +15,7 @@ public interface IPizzaRepository : IDisposable
     Task<CartDto> DeleteCartItemAsync(string token, int cartItemId);
     Task<CartDto> FindOrCreateCartItem(string token, CreateCartItemValues cartItem, int userCartId);
 
+    Task<string> CreateOrderAndCreatingPaymentURL(string token, OrderDTO order);
+
     Task SaveAsync();
 }

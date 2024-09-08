@@ -1,7 +1,15 @@
-//using PizzaMinApi;
+using Resend;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddOptions();
+builder.Services.AddHttpClient<ResendClient>();
+builder.Services.Configure<ResendClientOptions>(o =>
+{
+    o.ApiToken = "re_cwb8f7nu_KkiY31WKtYvjNepxRevPJQjp";// TODO перенести в конфиг
+});
+builder.Services.AddTransient<IResend, ResendClient>();
 
 RegisterServices(builder.Services);
 
@@ -57,6 +65,7 @@ void RegisterServices(IServiceCollection services)
     services.AddTransient<IApi, AuthApi>();
     services.AddTransient<IApi, CategoryApi>();
     services.AddTransient<IApi, CartApi>();
+    services.AddTransient<IApi, OrderApi>();
 
     services.AddCors(options =>
     {

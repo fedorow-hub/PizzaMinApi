@@ -2,14 +2,18 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Security.Authentication;
+using Newtonsoft.Json;
+using Resend;
 
 
 public class PizzaRepository : IPizzaRepository
 {
     private readonly PizzaDb _context;
-    public PizzaRepository(PizzaDb context)
+    private readonly IResend _resend;
+    public PizzaRepository(PizzaDb context, ResendClient resend)
     {
         _context = context;
+        _resend = resend;
     }
 
     public async Task<List<Product>> GetProductsAsync()
@@ -93,10 +97,10 @@ public class PizzaRepository : IPizzaRepository
     {
         //TODO Доработать фильтрацию
         var categories = await _context.Categories
-                                   .Include(c => c.Products).ThenInclude(p => p.Ingredients)
-                                   .Include(c => c.Products).ThenInclude(p => p.Items)
-                                   .Where(c => c.Products.Any())
-                                   .ToListAsync();
+            .Include(c => c.Products).ThenInclude(p => p.Ingredients)
+            .Include(c => c.Products).ThenInclude(p => p.Items)
+            .Where(c => c.Products.Any())
+            .ToListAsync();
 
         var categoryDtos = categories.Select(c => new CategoryDto
         {
@@ -300,6 +304,71 @@ public class PizzaRepository : IPizzaRepository
         };
     }
 
+    public async Task<string> CreateOrderAndCreatingPaymentURL(string token, OrderDTO orderDTO)
+    {
+        //находим корзину по userId или по токену
+        var cart = await _context.Carts
+            .Include(c => c.CartItems).ThenInclude(p => p.Ingredients)
+            .Include(c => c.CartItems).ThenInclude(p => p.ProductItem).ThenInclude(pi => pi.Product)
+            .Where(c => c.TokenId == token)
+            .FirstOrDefaultAsync();
+
+        //Если totalAmount 0 или если корзина не найдена возвращаем ошибку
+        if (cart == null || cart.TotalAmount == 0) throw new Exception(); //TODO создать кастомную ошибку
+
+        var cartItemDtos = cart.CartItems.Select(ci => new CartItemDto
+        {
+            Id = ci.Id,
+            ProductItem = new ProductItemDto
+            {
+                Id = ci.ProductItem.Id,
+                Price = ci.ProductItem.Price,
+                Size = ci.ProductItem.Size,
+                PizzaType = ci.ProductItem.PizzaType,
+                Product = new ProductDto
+                {
+                    Id = ci.ProductItem.Product.Id,
+                    Name = ci.ProductItem.Product.Name
+                }
+            },
+            Ingredients = ci.Ingredients.Select(i => new IngredientDto
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Price = i.Price
+            }).ToList()
+        }).ToList();
+
+        // создаем заказ
+        var order = new Order
+        {
+            Status = OrderStatus.PENDING,
+            TotalAmountCount = cart.TotalAmount,
+            FullName = orderDTO.firstName + " " + orderDTO.lastName,
+            Address = orderDTO.address,
+            Email = orderDTO.email,
+            Phone = orderDTO.phone,
+            Comment = orderDTO.comment,
+            CreatedAt = DateTime.Now,
+            ProductList = JsonConvert.SerializeObject(cartItemDtos)
+        };
+        await _context.Orders.AddAsync(order);
+
+        //удаляем все cartItem из корзины и обнуляем ее стоимость
+        cart.CartItems.RemoveAll(i => true);
+        cart.TotalAmount = 0;
+
+        await _context.SaveChangesAsync();
+
+        //создаем url для оплаты, используя Юмани
+        var url = "https://lucide.dev/icons/percent";
+
+        //отправляем письмо на почту о необходимости оплаты
+        var mailSender = new MailSender(_resend);
+        await mailSender.SendMailAsync(orderDTO.email, cart.Id.ToString(), order.TotalAmountCount, url);
+
+        return "https://lucide.dev/icons/percent";
+    }
     //функция обновления всей корзины
     private async Task<CartDto> UptateCartTotalAmountAsync(string token)
     {
@@ -363,4 +432,6 @@ public class PizzaRepository : IPizzaRepository
         };
         return cartDto;
     }
+
+
 }
