@@ -17,5 +17,7 @@ public interface IPizzaRepository : IDisposable
 
     Task<string> CreateOrderAndCreatingPaymentURL(string token, OrderDTO order);
 
+    Task PaymentCallbackHandle(PaymentObject paymentObject);
+
     Task SaveAsync();
 }

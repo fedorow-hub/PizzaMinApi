@@ -336,7 +336,8 @@ public class PizzaRepository : IPizzaRepository
                 Id = i.Id,
                 Name = i.Name,
                 Price = i.Price
-            }).ToList()
+            }).ToList(),
+            Quantity = ci.Quantity
         }).ToList();
 
         // создаем заказ
@@ -352,22 +353,57 @@ public class PizzaRepository : IPizzaRepository
             CreatedAt = DateTime.Now,
             ProductList = JsonConvert.SerializeObject(cartItemDtos)
         };
-        await _context.Orders.AddAsync(order);
 
         //удаляем все cartItem из корзины и обнуляем ее стоимость
         cart.CartItems.RemoveAll(i => true);
         cart.TotalAmount = 0;
+        await _context.Orders.AddAsync(order);
 
         await _context.SaveChangesAsync();
 
-        //создаем url для оплаты, используя Юмани
-        var url = "https://lucide.dev/icons/percent";
+        //создаем url для оплаты, используя Юмани        
+        PaymentData paymentData = await new PaymentService().CreatePayment($"Заказ №{cart.Id}", order.Id.ToString(), order.TotalAmountCount);
+
+        if (paymentData == null) throw new Exception();
+
+        order.PaymentId = paymentData.id;
+
+        await _context.SaveChangesAsync();
+
+        string paymentUrl = paymentData.confirmation.confirmation_url;
 
         //отправляем письмо на почту о необходимости оплаты
         var mailSender = new MailSender(_resend);
-        await mailSender.SendMailAsync(orderDTO.email, cart.Id.ToString(), order.TotalAmountCount, url);
+        await mailSender.SendMailPaymentAsync(orderDTO.email, cart.Id.ToString(), order.TotalAmountCount, paymentUrl);
 
-        return "https://lucide.dev/icons/percent";
+        return paymentUrl;
+    }
+
+    public async Task PaymentCallbackHandle(PaymentObject paymentObject)
+    {
+        //найти заказ по orderId, который прийдет в metadata
+        var order = await _context.Orders
+            .Where(c => c.Id == Convert.ToInt32(paymentObject.metadata.order_id))
+            .FirstOrDefaultAsync();
+
+        //и обновить его статус
+        var isCucceeded = paymentObject.status == "succeeded";
+        order.Status = isCucceeded ? OrderStatus.SUCCEEDED : OrderStatus.CANCELLED;
+        await _context.SaveChangesAsync();
+
+        //достать из order список товаров и email заказчика для отправки сообщения на почту
+        var email = order.Email;
+        var items = JsonConvert.DeserializeObject<List<ProductItemForLetter>>(order.ProductList);
+        var mailSender = new MailSender(_resend);
+        // отправляем письмо
+        if (isCucceeded)
+        {
+            await mailSender.SendMailSuccessAsync(email, items, order.Id);
+        }
+        else
+        {
+            //TODO письмо о неуспешной оплате
+        }
     }
     //функция обновления всей корзины
     private async Task<CartDto> UptateCartTotalAmountAsync(string token)

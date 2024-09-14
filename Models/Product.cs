@@ -25,6 +25,17 @@ public class ProductItem
     public DateTime UpdatedAt { get; set; }
 }
 
+public class ProductItemForLetter
+{
+    public int Id { get; set; }
+
+    public ProductItem ProductItem { get; set; }
+
+    public List<Ingredient> Ingredients { get; set; }
+
+    public int Quantity { get; set; }
+}
+
 public class Ingredient
 {
     public int Id { get; set; }

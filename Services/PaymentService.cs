@@ -1,67 +1,63 @@
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+
 public class PaymentService
 {
-    public async Task<string> CreatePayment(string descriptionValue, string orderId, double amountValue)
+  public async Task<PaymentData> CreatePayment(string descriptionValue, string orderId, double amountValue)
+  {
+    var paymentData = new
     {
-        //string responce = "";
+      amount = new
+      {
+        value = amountValue,
+        currency = "RUB"
+      },
+      capture = true,
+      description = descriptionValue,
+      metadata = new
+      {
+        order_id = orderId
+      },
+      confirmation = new
+      {
+        type = "redirect",
+        return_url = "http://localhost:3000/"
+      }
+    };
 
-        var content = new
-        {
-            amount = new
-            {
-                value = amountValue,
-                currency = "RUB"
-            },
-            capture = true,
-            description = descriptionValue,
-            metadata = new
-            {
-                order_id = orderId
-            },
-            confirmation = new
-            {
-                type = "redirect",
-                return_url = "http://localhost:3000/"
-            }
-        };
-        // создаем JsonContent
-        JsonContent jsonContent = JsonContent.Create(content);
+    var json = JsonConvert.SerializeObject(paymentData);
 
-        using (HttpClient client = new HttpClient())
-        {
-            client.DefaultRequestHeaders.Add("Idempotence-Key", Guid.NewGuid().ToString());
-            client.
+    var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var responce = await client.PostAsync("https://api.yookassa.ru/v3/payments", jsonContent) as HttpResponseMessage;
-            return responce.Content;
-        }
-        return responce;
+    var request = new HttpRequestMessage(HttpMethod.Post, "https://api.yookassa.ru/v3/payments")
+    {
+      Content = content
+    };
+
+    var username = "454507";
+    var password = "test_CP532nflqaaOsKs41awJBi2WKVmE8svSGbKWzEWOmxg";
+
+    var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
+    request.Headers.Authorization = new AuthenticationHeaderValue("Basic", authToken);
+    request.Headers.Add("Idempotence-Key", Guid.NewGuid().ToString());
+
+    using (HttpClient client = new HttpClient())
+    {
+      var response = await client.SendAsync(request);
+
+      if (response.IsSuccessStatusCode)
+      {
+        var responseData = await response.Content.ReadAsStringAsync();
+        var payData = JsonConvert.DeserializeObject<PaymentData>(responseData);
+        return payData;
+      }
+      else
+      {
+        var errorData = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Error: {response.StatusCode}");
+        Console.WriteLine($"Error details: {errorData}");
+        return null;
+      }
     }
+  }
 }
-
-/* const { data } = await axios.post<PaymentData>(
-    'https://api.yookassa.ru/v3/payments',
-    {
-      amount: {
-        value: details.amount,
-        currency: 'RUB',
-      },
-      capture: true,
-      description: details.description,
-      metadata: {
-        order_id: details.orderId,s
-      },
-      confirmation: {
-        type: 'redirect',
-        return_url: 'http://localhost:3000/?paid',
-      },
-    },
-    {
-      auth: {
-        username: process.env.YOOKASSA_API_KEY,
-        password: '',
-      },
-      headers: {
-        'Idempotence-Key': Math.random().toString(36).substring(7),
-      },
-    },
-  ); */
