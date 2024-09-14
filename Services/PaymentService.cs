@@ -21,7 +21,7 @@ public class PaymentService
       confirmation = new
       {
         type = "redirect",
-        return_url = "http://localhost:3000/"
+        return_url = "http://localhost:3000/?paid"
       }
     };
 
