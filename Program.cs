@@ -66,6 +66,8 @@ void RegisterServices(IServiceCollection services)
     services.AddTransient<IApi, CategoryApi>();
     services.AddTransient<IApi, CartApi>();
     services.AddTransient<IApi, OrderApi>();
+    services.AddTransient<IApi, ProfileApi>();
+    services.AddTransient<IApi, StoryApi>();
 
     services.AddCors(options =>
     {

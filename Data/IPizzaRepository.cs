@@ -7,6 +7,8 @@ public interface IPizzaRepository : IDisposable
     Task UpdateProductAsync(Product product);
     Task DeleteProductAsync(int productId);
 
+    Task<List<StoryDTO>> GetStoriesAsync();
+
     Task<List<Ingredient>> GetIngredientsAsync();
     Task<List<CategoryDto>> GetCategoresAsync(double minPrice, double maxPrice, int[]? sizes, int[]? pizzaTypes, int[]? ingredientsIdArr);
 

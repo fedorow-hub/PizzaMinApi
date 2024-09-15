@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PizzaMinApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8bda4f20038e88bd647ff5f8d1223abc0b2494ad")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+93ae20fb784289bbed7174a47c5d9802ab8e37e3")]
 [assembly: System.Reflection.AssemblyProductAttribute("PizzaMinApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PizzaMinApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

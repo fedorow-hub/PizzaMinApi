@@ -93,6 +93,25 @@ public class PizzaRepository : IPizzaRepository
         return await _context.Ingredients.ToListAsync();
     }
 
+    public async Task<List<StoryDTO>> GetStoriesAsync()
+    {
+        var stories = await _context.Stores
+            .Include(s => s.StoryItems)
+            .ToListAsync();
+
+        var storyDto = stories.Select(s => new StoryDTO
+        {
+            Id = s.Id,
+            PreviewImageUrl = s.PreviewImageUrl,
+            StoryItems = s.StoryItems.Select(i => new StoryItemDTO
+            {
+                Id = i.Id,
+                SourceUrl = i.SourceUrl
+            }).ToList()
+        }).ToList();
+        return storyDto;
+    }
+
     public async Task<List<CategoryDto>> GetCategoresAsync(double minPrice, double maxPrice, int[]? sizes, int[]? pizzaTypes, int[]? ingredientsIdArr)
     {
         //TODO Доработать фильтрацию

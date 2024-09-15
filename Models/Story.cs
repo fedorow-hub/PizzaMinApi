@@ -19,5 +19,17 @@ public class StoryItem
     public string SourceUrl { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; }
+}
 
+public class StoryDTO
+{
+    public int Id { get; set; }
+    public string PreviewImageUrl { get; set; } = string.Empty;
+    public List<StoryItemDTO> StoryItems { get; set; }
+}
+
+public class StoryItemDTO
+{
+    public int Id { get; set; }
+    public string SourceUrl { get; set; } = string.Empty;
 }
