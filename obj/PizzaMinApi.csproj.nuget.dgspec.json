@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj": {}
+    "c:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj": {
+    "c:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj",
+        "projectUniqueName": "c:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj",
         "projectName": "PizzaMinApi",
-        "projectPath": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj",
+        "projectPath": "c:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj",
         "packagesPath": "C:\\Users\\Сергей\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\obj\\",
+        "outputPath": "c:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Сергей\\AppData\\Roaming\\NuGet\\NuGet.Config",

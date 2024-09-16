@@ -21,5 +21,9 @@ public interface IPizzaRepository : IDisposable
 
     Task PaymentCallbackHandle(PaymentObject paymentObject);
 
+    Task<List<User>> GetAllUsersAsync();
+
+    Task InsertUserAsync(UserVM user);
+
     Task SaveAsync();
 }

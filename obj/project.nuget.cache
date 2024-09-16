@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "UjskFwJOaSI=",
+  "dgSpecHash": "cmlXoDzFKdA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj",
+  "projectFilePath": "c:\\Users\\Сергей\\source\\repos\\PizzaMinApi\\PizzaMinApi\\PizzaMinApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Сергей\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.2.0\\microsoft.aspnetcore.authentication.2.2.0.nupkg.sha512",
     "C:\\Users\\Сергей\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",

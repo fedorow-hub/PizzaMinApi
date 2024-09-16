@@ -488,5 +488,21 @@ public class PizzaRepository : IPizzaRepository
         return cartDto;
     }
 
+    public async Task<List<User>> GetAllUsersAsync()
+    {
+        return await _context.Users.ToListAsync();
+    }
 
+    public async Task InsertUserAsync(UserVM user)
+    {
+        User userDB = new User
+        {
+            FullName = user.fullName,
+            Email = user.email,
+            Login = user.login,
+            Password = user.password
+            //Role = user.role
+        };
+        await _context.Users.AddAsync(userDB);
+    }
 }
