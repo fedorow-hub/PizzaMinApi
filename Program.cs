@@ -44,20 +44,17 @@ void RegisterServices(IServiceCollection services)
     services.AddSingleton<ITokenService>(new TokenService());
     services.AddScoped<IUserRepository, UserRepository>();
     services.AddAuthorization();
-    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
+
+    services.AddAuthentication(config =>
+    {
+        config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+        .AddJwtBearer("Bearer", options =>
         {
-            options.TokenValidationParameters = new()
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                ValidAudience = builder.Configuration["Jwt:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-            };
+            options.Authority = "https://localhost:7245/"; //url сервера авторизации
+            options.Audience = "PizzaWebAPI";
+            options.RequireHttpsMetadata = false;
         });
 
     services.AddTransient<IApi, ProductApi>();
@@ -73,16 +70,15 @@ void RegisterServices(IServiceCollection services)
     services.AddCors(options =>
     {
         options.AddPolicy(name: MyAllowSpecificOrigins,
-                        policy =>
-                        {
-                            policy.WithOrigins("http://localhost:3000")
-                                .AllowAnyHeader()
-                                .AllowAnyMethod()
-                                .AllowCredentials();
-                        });
+            policy =>
+            {
+                policy.WithOrigins("http://localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
     });
 }
-
 
 void Configure(WebApplication app)
 {

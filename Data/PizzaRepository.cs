@@ -150,6 +150,32 @@ public class PizzaRepository : IPizzaRepository
         return categoryDtos;
     }
 
+    public async Task<List<Category>> GetCategoresAsync()
+    {
+        return await _context.Categories.ToListAsync();
+    }
+
+    public async Task<List<Category>> DeleteCategoryAsync(int categoryId)
+    {
+        var categoryFromDb = await _context.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+
+        if (categoryFromDb == null) return null;
+
+        _context.Categories.Remove(categoryFromDb);
+        await _context.SaveChangesAsync();
+        return await _context.Categories.ToListAsync();
+    }
+
+    public async Task<List<Category>> UpdateCategoryAsync(int categoryId, CategoryDto category)
+    {
+        Category categroryFromDB = await _context.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
+        categroryFromDB.Name = category.Name;
+
+        _context.Categories.Update(categroryFromDB);
+        await _context.SaveChangesAsync();
+        return await _context.Categories.ToListAsync();
+    }
+
     //(ingredientsIdArr == null ? p.Ingredients : p.Ingredients.Where(i => ingredientsIdArr.Contains(i.Id)))
 
     public async Task SaveAsync()
@@ -500,9 +526,42 @@ public class PizzaRepository : IPizzaRepository
             FullName = user.fullName,
             Email = user.email,
             Login = user.login,
-            Password = user.password
-            //Role = user.role
+            Password = user.password,
+            Role = (UserRole)user.role
         };
         await _context.Users.AddAsync(userDB);
     }
+
+    public async Task<List<User>> DeleteUserAsync(int userId)
+    {
+        var userFromDb = await _context.Users.FirstOrDefaultAsync(c => c.Id == userId);
+        _context.Users.Remove(userFromDb);
+        await _context.SaveChangesAsync();
+        return await _context.Users.ToListAsync();
+    }
+
+    public async Task<List<User>> UpdateUserAsync(int userId, UserVM user)
+    {
+        User userFromDb = await _context.Users.FirstOrDefaultAsync(c => c.Id == userId);
+        userFromDb.FullName = user.fullName;
+        userFromDb.Email = user.email;
+        userFromDb.Login = user.login;
+        userFromDb.Password = user.password;
+        userFromDb.Role = (UserRole)user.role;
+
+        _context.Users.Update(userFromDb);
+        await _context.SaveChangesAsync();
+        return await _context.Users.ToListAsync();
+    }
+
+    public async Task InsertCategoryAsync(CategoryDto category)
+    {
+        Category categoryDB = new Category
+        {
+            Name = category.Name
+        };
+        await _context.Categories.AddAsync(categoryDB);
+    }
+
+
 }

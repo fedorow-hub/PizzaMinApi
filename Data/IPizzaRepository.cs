@@ -11,6 +11,10 @@ public interface IPizzaRepository : IDisposable
 
     Task<List<Ingredient>> GetIngredientsAsync();
     Task<List<CategoryDto>> GetCategoresAsync(double minPrice, double maxPrice, int[]? sizes, int[]? pizzaTypes, int[]? ingredientsIdArr);
+    Task<List<Category>> GetCategoresAsync();
+    Task<List<Category>> DeleteCategoryAsync(int categoryId);
+    Task InsertCategoryAsync(CategoryDto category);
+    Task<List<Category>> UpdateCategoryAsync(int categoryId, CategoryDto category);
 
     Task<CartDto> FindOrCreateCartAsync(string token);
     Task<CartDto> PatchCartItemAsync(string token, int id, int quantity);
@@ -24,6 +28,10 @@ public interface IPizzaRepository : IDisposable
     Task<List<User>> GetAllUsersAsync();
 
     Task InsertUserAsync(UserVM user);
+
+    Task<List<User>> DeleteUserAsync(int userId);
+
+    Task<List<User>> UpdateUserAsync(int userId, UserVM user);
 
     Task SaveAsync();
 }
